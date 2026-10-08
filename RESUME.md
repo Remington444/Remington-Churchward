@@ -1,13 +1,13 @@
 # Remington Churchward
 
-(951) 331-5951
-rchurchward4@gmail.com
+(951) xxx-xxxx
+xxxxxxxxxxx@gmail.com
 
 ## Education
 
 **University of Hawaii at Manoa**
 Shidler College of Business
-BBA in Business Management — August 2023-Present
+BBA in Business Finance — August 2023-Present
 Expected Graduation: Spring of 2027
 GPA: 3.69
 
