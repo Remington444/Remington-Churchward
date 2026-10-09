@@ -7,3 +7,4 @@ Since September 2024, I've worked as a server at a restaurant in Waikiki. It's a
 My coursework spans statistical analysis, business information systems, accrual and managerial accounting, behavioral management, and written business communication. I'm comfortable in Microsoft Office 365 and Google Workspace, especially Excel and Sheets, and I use those tools to build the analyses in this repository.
 
 This repository is my portfolio for International Business Finance. It holds my capabilities, briefs, analyses, and recommendations, along with a log of how I use AI tools in my work. After graduation, I hope to use the coursework from this class and the others like it to have a succesful carreer in Finance.
+AI disclosure: I wrote the original bio, and Claude (Anthropic) reworded it using facts from my resume; I reviewed and edited the final text. 
