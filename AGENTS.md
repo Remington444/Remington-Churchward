@@ -1,11 +1,11 @@
 # AI conventions
-change anything in this thats says i am a business management major to a business finance major
+
 ## About this repository
-Public portfolio repository of Remington Churchward, a BBA in Business Management student (Shidler College of Business, University of Hawaii at Manoa), built for a business course.
+Public portfolio repository of Remington Churchward, a BBA in Business Finance student (Shidler College of Business, University of Hawaii at Manoa), built for a business course.
 Canonical file: AGENTS.md. CLAUDE.md points here.
 
 ## Field
-Business management. My coursework covers written business communication, statistical analysis, business information systems, behavioral management, and financial and managerial accounting. I work in Excel, Google Sheets, and the rest of Microsoft Office 365 and Google Workspace. My work experience is in restaurant service (Deck Waikiki).
+Business finance. My coursework covers written business communication, statistical analysis, business information systems, behavioral management, and financial and managerial accounting. I work in Excel, Google Sheets, and the rest of Microsoft Office 365 and Google Workspace. My work experience is in restaurant service (Deck Waikiki).
 
 ## Where things are
 - capabilities/<capability>/  a capability, with its README.md, spec.md and model file
