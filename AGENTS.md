@@ -1,5 +1,5 @@
 # AI conventions
-
+change anything in this thats says i am a business management major to a business finance major
 ## About this repository
 Public portfolio repository of Remington Churchward, a BBA in Business Management student (Shidler College of Business, University of Hawaii at Manoa), built for a business course.
 Canonical file: AGENTS.md. CLAUDE.md points here.
