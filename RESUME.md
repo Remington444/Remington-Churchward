@@ -45,18 +45,4 @@ Server — September 2024 – Present
 
 ## References
 
-**Ian Arakaki**, Manager
-Deck Waikiki
-150 Kapahulu Avenue
-Honolulu, HI 96815
-(808) 429-8692
-iarakaki37@gmail.com
-
-**Karyl Garland**, Lecturer
-University of Hawaii at Manoa
-Shidler College of Business
-Department of Marketing
-2400 Maile Way, C-302
-Honolulu, HI 96822
-(808) 349-5046
-karyl8@hawaii.edu
+References available upon request
