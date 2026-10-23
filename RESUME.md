@@ -30,12 +30,12 @@ Server — September 2024 – Present
 - Fast pace work environment
 - Upselling Skills
 - Interpersonal Skills
-- Leaderships skills from previous roles in sports/work
+- Leadership skills from previous roles in sports/work
 
 ## Applicable Skills
 
 - Proficient with Microsoft Office 365 (Word, Excel, Powerpoint)
-- Adept with Google Suit (Docs, Sheets, Slides)
+- Adept with Google Workspace (Docs, Sheets, Slides)
 
 ## Awards/Honors
 
