@@ -23,3 +23,18 @@ Two of the ten named ranges are missing. K_CALL (1.1187) and PREM_CALL (0.0199) 
 The §2.1 table has no Stage-4 source column and no placeholder flag. Each input needs its own source, for example: spot from Fed H.10, rates from CME Term SOFR and EMMI Euribor, forward and premiums from a bank or CME quote. Each value also needs the exact flag “indicative, replaced with live data at Stage 4.” The rubric also wants you to say that the strikes at spot and the two rates are values you chose.
 The problem statement is missing two required items. It has no settlement date (inception date + 91 days) and no dollar consequence. Your brief had one: a 5% euro decline costs about $134,000 and hits grower payments.
 
+## 2026-11-06
+
+**What I asked:** AI gap review of my Stage 2 spec (v1.1), then a revised draft with the fixes.
+
+**What was produced:** spec v1.2 with 14 changes (see spec change log).
+
+**Accepted:**
+- Split the parity test into V5 (formula check, should pass) and V6 (stale-quote flag, expected to trip). Before: one check that would have looked like a model error. After: the expected failure is labeled.
+- Added K_CALL / PREM_CALL. I had dropped them because the call doesn't hedge a receivable, but the contract needs all ten names.
+- [the others you agree with, one line each]
+
+**Rejected:**
+- [Parity Tolerance] — [The two versions barely differ: 0.5% of 1.1228 is about 0.56 cents, or about $13,500, against $12,000. Keeping original costs almost nothing in accuracy and makes the model more reusable.]
+
+**What was wrong and how it was caught:** AI review found my draft had no Tab architecture or Validation section, used two names for money-market proceeds, and set a parity tolerance that contradicted my brief.
