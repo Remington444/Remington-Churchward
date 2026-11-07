@@ -48,7 +48,7 @@ All inputs sit on the **Inputs** tab as workbook-level named ranges, formatted a
 | `BASIS` | Day-count denominator, both legs (USD and EUR are both ACT/360) | 360 | Days |
 | `STEP_FRAC` | Sensitivity step | 0.01 | Decimal (1%) |
 | `GRID_RANGE` | Sensitivity half-width | 0.05 | Decimal (±5%) |
-| `PARITY_TOL` | Maximum acceptable gap between `F0_in` and the parity-implied forward | 0.0050 | USD per EUR (0.5 cents, about $12,000 on `FC_AMT`) |
+| `PARITY_TOL` | Maximum acceptable gap between `F0_in` and the parity-implied forward | 0.00050 | USD per EUR (0.05 cents, about $12,000 on `FC_AMT`) |
 
 ## 3. Tab Architecture
 
@@ -100,7 +100,7 @@ Parity diagnostics (same tab):
 - `FWD_PARITY` = `S0_in × DF_USD / DF_FC` (the forward rate implied by covered interest-rate parity)
 - `PARITY_GAP` = `F0_in − FWD_PARITY` (positive means the quote is above parity)
 - `MM_FWD_GAP_USD` = `USD_FWD − USD_MM`
-- `PARITY_FLAG` = `"STALE QUOTE"` if `ABS(PARITY_GAP) > PARITY_TOL`, otherwise `"OK"`
+- `PARITY_FLAG` = `"STALE QUOTE"` if 'ABS(PARITY_GAP) / FWD_PARITY > PARITY_TOL', otherwise `"OK"`
 
 ### 5.4 Put option hedge (Put tab)
 
@@ -157,7 +157,7 @@ Each rule shows expected, actual, and result. Expected values are for the placeh
 | V3 | All ten core names and four parameters exist and point to the Inputs tab | 14 names | none | FAIL |
 | V4 | `DF_USD` / `DF_FC` † | 1.0102881 / 1.0066228 | ±0.0000001 | FAIL |
 | V5 | **Formula parity:** `USD_MM` = `FC_AMT × FWD_PARITY` | Difference $0.00 | ±$1 | FAIL (formula error) |
-| V6 | **Quote parity:** `ABS(PARITY_GAP)` ≤ `PARITY_TOL` | `PARITY_GAP` = 0.042527 → **flag expected** | 0.0050 | FLAG "STALE QUOTE" (not a model error) |
+| V6 | **Quote parity:** `BS(PARITY_GAP) / FWD_PARITY ≤ PARITY_TOL = 0.042527 → **flag expected** | 0.0050 | FLAG "STALE QUOTE" (not a model error) |
 | V7 | `MM_FWD_GAP_USD` = `PARITY_GAP × FC_AMT` | $102,063.91 † | ±$1 | FAIL |
 | V8 | Loan repays exactly: `MM_EUR_BORROW × DF_FC` = `FC_AMT` | 2,400,000.00 | ±€1 | FAIL |
 | V9 | Money-market steps † | `MM_EUR_BORROW` 2,384,209.91; `MM_USD_NOW` 2,667,215.62; `USD_MM` 2,694,656.09 | ±$1 | FAIL |
