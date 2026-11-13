@@ -16,8 +16,8 @@ Primary objective: protect the dollar value of the receivable at an acceptable c
 Methods
 I will compare three hedge families on the same receivable:
 Lock it in (forward). Agree today to sell EUR 2.4M at the indicative 91-day rate of 1.1653, fixing proceeds at $2,796,720. No upfront cost, but no gain if the euro strengthens.
-Build our own lock (money-market hedge). Borrow euros today, convert at spot, and invest the dollars for 91 days; the customer's payment repays the loan. At today's rates this locks in about $2,694,656. Same certainty, but it uses credit lines and has more moving parts.
-Buy insurance (EUR put). For $35,643 in premium, we buy the right to sell euros at today's spot. Net of premium, proceeds cannot fall below about $2,649,656, and we keep the upside. Like fire insurance, we pay whether or not we use it. It beats the quoted forward only if the euro ends above about 1.18.
+Build our own lock (money-market hedge). Borrow euros today, convert at spot, and invest the dollars for 91 days; the customer's payment repays the loan. At today's rates this locks in about $2,649,237. Same certainty, but it uses credit lines and has more moving parts.
+Buy insurance (EUR put). For $35,643 in premium, we buy the right to sell euros at today's spot. Net of premium, proceeds cannot fall below about $2,649,237, and we keep the upside. Like fire insurance, we pay whether or not we use it. It beats the quoted forward only if the euro ends above about 1.18.
 The term sheet's call option protects a euro payable, not a receivable, so it is excluded.
 Hypothesis: I expect the quoted forward to beat the money-market hedge by about $102,064, because the 1.1653 quote sits about 4.3 cents above the 1.1228 forward implied by covered interest parity. With a live quote, I expect the two to converge within a few thousand dollars.
 
