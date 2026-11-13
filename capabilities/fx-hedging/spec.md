@@ -9,8 +9,8 @@
 | Created by | Remington Churchward |
 | Updated by | Remington Churchward |
 | Date Created | 2026-10-30 |
-| Date Updated | 2026-11-06 |
-| Version | 1.2 |
+| Date Updated | 2026-11-12 |
+| Version | 1.3 |
 | LLM Used | ChatGPT GPT-6 (calculation review); Claude Opus 5.5 (gap review and revision, v1.2) |
 | Role | Treasury Analyst / FP&A Analyst |
 | Audience | CFO / Director of Treasury |
@@ -48,7 +48,7 @@ All inputs sit on the **Inputs** tab as workbook-level named ranges, formatted a
 | `BASIS` | Day-count denominator, both legs (USD and EUR are both ACT/360) | 360 | Days |
 | `STEP_FRAC` | Sensitivity step | 0.01 | Decimal (1%) |
 | `GRID_RANGE` | Sensitivity half-width | 0.05 | Decimal (±5%) |
-| `PARITY_TOL` | Maximum acceptable gap between `F0_in` and the parity-implied forward | 0.00050 | USD per EUR (0.05 cents, about $12,000 on `FC_AMT`) |
+| `PARITY_TOL` | Maximum acceptable gap between `F0_in` and the parity-implied forward, as a fraction of `FWD_PARITY` | 0.005 | Decimal (0.5% of `FWD_PARITY`; at placeholder inputs about 0.0056 USD per EUR, or about $13,473 on `FC_AMT`) |
 
 ## 3. Tab Architecture
 
@@ -100,7 +100,8 @@ Parity diagnostics (same tab):
 - `FWD_PARITY` = `S0_in × DF_USD / DF_FC` (the forward rate implied by covered interest-rate parity)
 - `PARITY_GAP` = `F0_in − FWD_PARITY` (positive means the quote is above parity)
 - `MM_FWD_GAP_USD` = `USD_FWD − USD_MM`
-- `PARITY_FLAG` = `"STALE QUOTE"` if 'ABS(PARITY_GAP) / FWD_PARITY > PARITY_TOL', otherwise `"OK"`
+- `PARITY_GAP_PCT` = `ABS(PARITY_GAP) / FWD_PARITY` (the gap as a fraction of the parity rate)
+- `PARITY_FLAG` = `"STALE QUOTE"` if `PARITY_GAP_PCT > PARITY_TOL`, otherwise `"OK"`
 
 ### 5.4 Put option hedge (Put tab)
 
@@ -157,7 +158,7 @@ Each rule shows expected, actual, and result. Expected values are for the placeh
 | V3 | All ten core names and four parameters exist and point to the Inputs tab | 14 names | none | FAIL |
 | V4 | `DF_USD` / `DF_FC` † | 1.0102881 / 1.0066228 | ±0.0000001 | FAIL |
 | V5 | **Formula parity:** `USD_MM` = `FC_AMT × FWD_PARITY` | Difference $0.00 | ±$1 | FAIL (formula error) |
-| V6 | **Quote parity:** `BS(PARITY_GAP) / FWD_PARITY ≤ PARITY_TOL = 0.042527 → **flag expected** | 0.0050 | FLAG "STALE QUOTE" (not a model error) |
+| V6 | **Quote parity:** `PARITY_GAP_PCT` ≤ `PARITY_TOL` | `PARITY_GAP_PCT` = 0.037876 (3.79%) → **flag expected** | `PARITY_TOL` = 0.005 (0.5%) | FLAG "STALE QUOTE" (not a model error) |
 | V7 | `MM_FWD_GAP_USD` = `PARITY_GAP × FC_AMT` | $102,063.91 † | ±$1 | FAIL |
 | V8 | Loan repays exactly: `MM_EUR_BORROW × DF_FC` = `FC_AMT` | 2,400,000.00 | ±€1 | FAIL |
 | V9 | Money-market steps † | `MM_EUR_BORROW` 2,384,209.91; `MM_USD_NOW` 2,667,215.62; `USD_MM` 2,694,656.09 | ±$1 | FAIL |
@@ -188,6 +189,7 @@ Each rule shows expected, actual, and result. Expected values are for the placeh
 | `USD_FLOOR_PUT` | Put | $2,649,237.04 |
 | `FWD_PARITY` | MoneyMarket | 1.122773 |
 | `PARITY_GAP` | MoneyMarket | 0.042527 |
+| `PARITY_GAP_PCT` | MoneyMarket | 0.037876 (3.79%) |
 | `MM_FWD_GAP_USD` | MoneyMarket | $102,063.91 |
 | `PARITY_FLAG` | MoneyMarket | STALE QUOTE |
 | `BE_PUT_VS_FWD` | Put | 1.180151 |
@@ -206,3 +208,4 @@ The **Cover** tab repeats `USD_FWD`, `USD_MM`, `USD_FLOOR_PUT`, `MM_FWD_GAP_USD`
 | 1.0 | 2026-10-30 | Remington Churchward | Initial company-specific specification draft |
 | 1.1 | 2026-11-06 | Remington Churchward | Refined calculations, named ranges, audit checks, and workbook requirements |
 | 1.2 | 2026-11-06 | Remington Churchward | After AI gap review: reordered to the eight required sections; added Tab architecture and Validation rules with expected values; added `K_CALL`/`PREM_CALL`, the Stage-4 source column, and placeholder flags; added settlement date and dollar consequence; renamed `USD_PARITY` to `USD_MM` and named MM step 2 `MM_USD_NOW`; split the parity test into a formula check (V5) and a stale-quote flag (V6); aligned `PARITY_TOL` with the brief's 0.5 cents; replaced the text `GRID_RANGE` with a number; specified chart type, labels, tie rule, and gray named outputs; noted the premium-treatment change from the brief; removed template guidance sections |
+| 1.3 | 2026-11-12 | Remington Churchward | Instructor feedback: stated `PARITY_TOL` one way everywhere (0.005 as a fraction of `FWD_PARITY`, matching my rejection of the fixed 0.5-cent tolerance in the prompt log); corrected the §2.2 dollar figure; added named output `PARITY_GAP_PCT` so `PARITY_FLAG` and V6 test the same cell; repaired the V6 table row |
