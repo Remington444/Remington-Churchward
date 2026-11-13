@@ -32,9 +32,21 @@ The problem statement is missing two required items. It has no settlement date (
 **Accepted:**
 - Split the parity test into V5 (formula check, should pass) and V6 (stale-quote flag, expected to trip). Before: one check that would have looked like a model error. After: the expected failure is labeled.
 - Added K_CALL / PREM_CALL. I had dropped them because the call doesn't hedge a receivable, but the contract needs all ten names.
-- [the others you agree with, one line each]
+- Added Tab architecture (nine tabs, including Checks) and a Validation rules section with expected values and tolerances.
+- Added a Stage-4 source for every input and flagged placeholder values.
+- Added the settlement date (2027-01-29) and the dollar consequence of a 5% euro decline to the problem statement.
+- Used one name for money-market proceeds (`USD_MM`) and named step 2 `MM_USD_NOW`.
+- Specified an XY scatter chart, exact winner labels with a tie rule, and named gray output cells.
 
 **Rejected:**
-- [Parity Tolerance] — [The two versions barely differ: 0.5% of 1.1228 is about 0.56 cents, or about $13,500, against $12,000. Keeping original costs almost nothing in accuracy and makes the model more reusable.]
+- Parity tolerance as a fixed 0.5 cents: the two versions barely differ (0.5% of 1.1228 is about 0.56 cents, or about $13,500, against $12,000). Keeping my original percentage costs almost nothing in accuracy and makes the model more reusable.
 
 **What was wrong and how it was caught:** AI review found my draft had no Tab architecture or Validation section, used two names for money-market proceeds, and set a parity tolerance that contradicted my brief.
+
+## 2026-11-12
+
+**What I asked:** Fix the instructor's 2026-11-07 feedback on Stage 2: make the parity tolerance say one thing, repair the V6 table row, write the capability README, and replace the bracketed template line in the 2026-11-06 entry.
+
+**What was produced:** spec v1.3 with `PARITY_TOL` = 0.005 as a fraction of `FWD_PARITY` in §2.2, `PARITY_FLAG` and V6, plus a new named output `PARITY_GAP_PCT` (0.037876) that both test; a rewritten capabilities/fx-hedging/README.md with a scenario 30 row; the 2026-11-06 entry's bracketed lines replaced with the fixes I accepted (edited at the instructor's request).
+
+**What was wrong and how it was caught:** When I applied my tolerance rejection, I changed §2.2 to 0.00050 USD per EUR and labeled it "about $12,000". That is 0.05 cents, which is only $1,200 on EUR 2,400,000. I also left V6 at 0.0050 and broke its table row with an unclosed backtick. The instructor caught all three; I checked the dollar figure (0.5% × 1.122773 × 2,400,000 = $13,473) before fixing it.
