@@ -10,7 +10,7 @@
 | Updated by | Remington Churchward |
 | Date Created | 2026-10-30 |
 | Date Updated | 2026-11-12 |
-| Version | 1.3 |
+| Version | 1.4 |
 | LLM Used | ChatGPT GPT-6 (calculation review); Claude Opus 5.5 (gap review and revision, v1.2) |
 | Role | Treasury Analyst / FP&A Analyst |
 | Audience | CFO / Director of Treasury |
@@ -55,11 +55,12 @@ All inputs sit on the **Inputs** tab as workbook-level named ranges, formatted a
 | Tab | Purpose |
 |---|---|
 | **Cover** | Title, company, exposure (`FC_AMT`, settlement date), author, version, date, and a one-line summary of the headline outputs (linked, not typed). |
-| **Legend** | Color key: yellow = market input, blue = model parameter, black = formula, green = link to another tab, gray = named output. Lists every named range with its tab. |
+| **Legend** | Color key (the build contract's convention, applied as cell fills): yellow = input, blue = assumption or model parameter, green = formula, gray = named output. Lists every named range with its tab. |
 | **Inputs** | The ten core inputs (§2.1) and four parameters (§2.2), each with unit, source, and access timestamp. The only tab an analyst edits. |
 | **Forward** | Forward hedge calculation (§5.2). |
 | **MoneyMarket** | Money-market hedge in three visible steps, the parity-implied forward, and the parity gap (§5.3). |
 | **Put** | Premium carried to settlement, put payoff, floor, and breakevens (§5.4). |
+| **Call** | Call premium carried to settlement, the call's USD cost as a function of `S_T`, and its cap (§5.5). Shown as a payable illustration; not one of the receivable strategies. |
 | **Sensitivity** | The 11-row grid, hedge-profit columns, winner labels, and chart (§6). |
 | **Checks** | Every validation rule in §7 with its expected value, actual value, and PASS / FAIL / FLAG result. |
 | **Notes** | Assumptions (§4), data sources with retrieval date and time, and the change log. |
@@ -115,9 +116,13 @@ Below the strike the company exercises and sells at `K_PUT`; above it the option
 - `BE_PUT_VS_FWD` = `F0_in − FV_PREM_PUT / FC_AMT` (the `S_T` above which the put beats the forward)
 - `BE_PUT_VS_NOHEDGE` = `K_PUT + FV_PREM_PUT / FC_AMT` (the `S_T` below which the put beats staying unhedged)
 
-### 5.5 Call option (specified for completeness, not built)
+### 5.5 Call option (Call tab; payable illustration)
 
-A EUR call protects a EUR **payable**: it caps the USD cost of buying euros. For a payable of `FC_AMT`, outlay = `MIN(S_T, K_CALL) × FC_AMT + PREM_CALL × FC_AMT × DF_USD`. Buying a call on top of a receivable would add euro exposure, not reduce it, so the workbook does not compute a call strategy. `K_CALL` and `PREM_CALL` stay on the Inputs tab to keep the ten-name contract complete.
+A EUR call protects a EUR **payable**: it caps the USD cost of buying euros. Buying a call on top of a receivable would add euro exposure, not reduce it, so the call is **not** one of the receivable strategies and is excluded from the winner labels. The build contract still requires the call's premium in USD and its payoff as a function of `S_T`, so the Call tab shows what the same EUR 2,400,000 would cost to *buy* with a call:
+
+- `FV_PREM_CALL` = `−PREM_CALL × FC_AMT × DF_USD` *(negative: a cost carried to settlement)*
+- `USD_CALL_COST(S_T)` = `MIN(S_T, K_CALL) × FC_AMT − FV_PREM_CALL` *(USD paid for the euros, including the premium)*
+- `USD_CEIL_CALL` = `K_CALL × FC_AMT − FV_PREM_CALL` (the maximum cost)
 
 ## 6. Sensitivity Plan (Sensitivity tab)
 
@@ -136,6 +141,7 @@ A EUR call protects a EUR **payable**: it caps the USD cost of buying euros. For
 | `HP_FWD` | Forward − No hedge |
 | `HP_MM` | Money market − No hedge |
 | `HP_PUT` | Put − No hedge |
+| Call cost (payable illustration) | `MIN(S_T, K_CALL) × FC_AMT − FV_PREM_CALL`; a cost, not proceeds, so it is excluded from the chart and from both winner labels |
 | Overall winner | Label of the highest of the four proceeds columns |
 | Best active hedge | Label of the highest of Forward, Money market, Put |
 
@@ -149,7 +155,7 @@ Labels are exactly `No hedge`, `Forward`, `Money market`, `Put`. If two values a
 
 ## 7. Validation Rules (Checks tab)
 
-Each rule shows expected, actual, and result. Expected values are for the placeholder inputs; after Stage 4, the rules marked † are recomputed from the live inputs, and the others must still hold.
+Each rule shows expected, actual, and result. In the workbook the expected value is an **independent recomputation** from the named inputs (a different formula path from the model's own cells), not a typed number, so the checks still work after Stage 4; the figures below are what those recomputations give at the placeholder inputs. Tolerances are named parameters on the Inputs tab: `CHK_TOL_USD` = 1, `CHK_TOL_RATE` = 0.000001, `CHK_TOL_DF` = 0.0000001. Expected values are for the placeholder inputs; after Stage 4, the rules marked † are recomputed from the live inputs, and the others must still hold.
 
 | # | Rule | Expected (placeholders) | Tolerance | Result if outside |
 |---|---|---|---|---|
@@ -194,10 +200,12 @@ Each rule shows expected, actual, and result. Expected values are for the placeh
 | `PARITY_FLAG` | MoneyMarket | STALE QUOTE |
 | `BE_PUT_VS_FWD` | Put | 1.180151 |
 | `BE_PUT_VS_NOHEDGE` | Put | 1.103849 |
+| `FV_PREM_CALL` | Call | −$48,251.36 |
+| `USD_CEIL_CALL` | Call | $2,733,131.36 |
 | `SENS_TABLE` (the 11-row grid in §6) | Sensitivity | — |
 | Sensitivity chart | Sensitivity | — |
 
-The **Cover** tab repeats `USD_FWD`, `USD_MM`, `USD_FLOOR_PUT`, `MM_FWD_GAP_USD`, and `PARITY_FLAG` as green links. The recommendation itself belongs in the Stage 5 decision memo, not the workbook.
+The **Cover** tab repeats `USD_FWD`, `USD_MM`, `USD_FLOOR_PUT`, `MM_FWD_GAP_USD`, and `PARITY_FLAG` as linked formulas. The recommendation itself belongs in the Stage 5 decision memo, not the workbook.
 
 ---
 
@@ -209,3 +217,4 @@ The **Cover** tab repeats `USD_FWD`, `USD_MM`, `USD_FLOOR_PUT`, `MM_FWD_GAP_USD`
 | 1.1 | 2026-11-06 | Remington Churchward | Refined calculations, named ranges, audit checks, and workbook requirements |
 | 1.2 | 2026-11-06 | Remington Churchward | After AI gap review: reordered to the eight required sections; added Tab architecture and Validation rules with expected values; added `K_CALL`/`PREM_CALL`, the Stage-4 source column, and placeholder flags; added settlement date and dollar consequence; renamed `USD_PARITY` to `USD_MM` and named MM step 2 `MM_USD_NOW`; split the parity test into a formula check (V5) and a stale-quote flag (V6); aligned `PARITY_TOL` with the brief's 0.5 cents; replaced the text `GRID_RANGE` with a number; specified chart type, labels, tie rule, and gray named outputs; noted the premium-treatment change from the brief; removed template guidance sections |
 | 1.3 | 2026-11-12 | Remington Churchward | Instructor feedback: stated `PARITY_TOL` one way everywhere (0.005 as a fraction of `FWD_PARITY`, matching my rejection of the fixed 0.5-cent tolerance in the prompt log); corrected the §2.2 dollar figure; added named output `PARITY_GAP_PCT` so `PARITY_FLAG` and V6 test the same cell; repaired the V6 table row |
+| 1.4 | 2026-11-12 | Remington Churchward | Stage 3 build contract check, before generating the workbook: changed the color key to the contract's convention (green = formula, blue = assumption); added a Call tab and call-cost column, because the contract requires the call's premium and payoff as a function of `S_T` (still excluded from the winner labels); stated that check expected values are independent recomputations and named the check tolerances |

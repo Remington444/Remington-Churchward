@@ -5,7 +5,7 @@ This capability compares ways to protect the dollar value of a foreign-currency 
 | File | What it is | Stage |
 |---|---|---|
 | `spec.md` | Model specification: inputs, tabs, calculation flow, sensitivity plan, validation rules, outputs | 2 |
-| `model.xlsx` | Workbook built from the spec (not yet built) | 3 |
+| `model.xlsx` | Workbook built from spec v1.4: inputs, forward, money-market, put and call tabs, sensitivity grid and chart, and a Checks tab | 3 |
 
 ## Engagements
 

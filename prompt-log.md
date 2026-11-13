@@ -50,3 +50,11 @@ The problem statement is missing two required items. It has no settlement date (
 **What was produced:** spec v1.3 with `PARITY_TOL` = 0.005 as a fraction of `FWD_PARITY` in §2.2, `PARITY_FLAG` and V6, plus a new named output `PARITY_GAP_PCT` (0.037876) that both test; a rewritten capabilities/fx-hedging/README.md with a scenario 30 row; the 2026-11-06 entry's bracketed lines replaced with the fixes I accepted (edited at the instructor's request).
 
 **What was wrong and how it was caught:** When I applied my tolerance rejection, I changed §2.2 to 0.00050 USD per EUR and labeled it "about $12,000". That is 0.05 cents, which is only $1,200 on EUR 2,400,000. I also left V6 at 0.0050 and broke its table row with an unclosed backtick. The instructor caught all three; I checked the dollar figure (0.5% × 1.122773 × 2,400,000 = $13,473) before fixing it.
+
+## 2026-11-12 (Stage 3 build)
+
+**What I asked:** Execute Stage 3: build capabilities/fx-hedging/model.xlsx from my committed spec with an AI tool, following the build contract on the Stage 3 page.
+
+**What was produced:** Before building, Claude compared spec v1.3 to the build contract and found two conflicts. The spec's color key had black formulas and green cross-tab links, but the contract requires green = formula and blue = assumption. The spec also said the call was not built, but the contract requires the call's premium in USD and its payoff as a function of S_T. Claude fixed both in spec v1.4 (committed separately), adding a Call tab as a payable illustration that is excluded from the winner labels. It then generated model.xlsx from v1.4 with ten tabs, 45 named ranges, 480 formulas and no typed numbers outside Inputs. The Checks tab has V1–V19, with expected values recomputed independently from the inputs. All checks pass except V6, which flags the stale forward quote as the spec expects.
+
+**What was wrong and how it was caught:** On the first build, V1 (no error cells) reported one error. V1 scanned the Cover tab, and the Cover displays the check counts, which creates a circular reference. Claude narrowed V1's Cover range to skip the two check-count cells, recalculated, and V1 passed. My own audit of the workbook is still to do; findings go in the build-audit note.
