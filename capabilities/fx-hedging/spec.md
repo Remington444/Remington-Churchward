@@ -9,8 +9,8 @@
 | Created by | Remington Churchward |
 | Updated by | Remington Churchward |
 | Date Created | 2026-10-30 |
-| Date Updated | 2026-11-12 |
-| Version | 1.4 |
+| Date Updated | 2026-11-20 |
+| Version | 1.5 |
 | LLM Used | ChatGPT GPT-6 (calculation review); Claude Opus 5.5 (gap review and revision, v1.2) |
 | Role | Treasury Analyst / FP&A Analyst |
 | Audience | CFO / Director of Treasury |
@@ -32,13 +32,13 @@ All inputs sit on the **Inputs** tab as workbook-level named ranges, formatted a
 |---|---|---:|---|---|---|
 | `FC_AMT` | Foreign-currency receivable | 2,400,000 | EUR | Invoice (fixed) | Not replaced; invoice amount |
 | `S0_in` | Spot rate at inception | 1.1187 | USD per EUR | Trading Economics, 2026-10-30 | Timestamped EUR/USD spot (Federal Reserve H.10 or Trading Economics); time recorded in Notes |
-| `F0_in` | 91-day forward rate | 1.1653 | USD per EUR | Scenario indicative quote | Live 91-day EUR/USD forward (spot + forward points from a dealer or market data page), same timestamp as `S0_in` |
+| `F0_in` | 91-day forward rate | 1.1653 | USD per EUR | Scenario indicative quote | **Kept:** the bank's quote stays `F0_in` (Stage 4 rule). The CIP-implied forward is computed from live spot and rates to check it; a requote comes only from the bank (the instructor) |
 | `R_USD` | USD interest rate | 4.07% | Annual %, ACT/360 | 3-month CME Term SOFR, chosen by analyst | CME Term SOFR 3-month, latest publication |
 | `R_FC` | EUR interest rate | 2.62% | Annual %, ACT/360 | 3-month Euribor (2026-10-28 fixing), chosen by analyst | EMMI 3-month Euribor, latest fixing |
 | `K_PUT` | Put option strike | 1.1187 | USD per EUR | Set at spot (at the money), per scenario | Reset to the live `S0_in` value at Stage 4 |
 | `K_CALL` | Call option strike | 1.1187 | USD per EUR | Set at spot, per scenario | Reset to live `S0_in`. **Contract-complete only; not used in a receivable hedge (see §5.5)** |
-| `PREM_PUT` | Put premium per EUR | 0.0147 | USD | Scenario indicative | CME EUR/USD option settlement price or dealer quote matching `K_PUT` and expiry |
-| `PREM_CALL` | Call premium per EUR | 0.0199 | USD | Scenario indicative | Same source as `PREM_PUT`, matching `K_CALL`. **Not used (see §5.5)** |
+| `PREM_PUT` | Put premium per EUR | 0.0147 | USD | Scenario indicative | **Kept:** scenario premium, stated as an assumption (Stage 4 rule: retail option quotes are unreliable) |
+| `PREM_CALL` | Call premium per EUR | 0.0199 | USD | Scenario indicative | **Kept:** scenario premium, stated as an assumption. Payable illustration only (§5.5) |
 | `T_DAYS` | Days to settlement | 91 | Days | Scenario | Actual calendar days, inception date to settlement date |
 
 ### 2.2 Model parameters (blue cells; conventions, not market data)
@@ -218,3 +218,4 @@ The **Cover** tab repeats `USD_FWD`, `USD_MM`, `USD_FLOOR_PUT`, `MM_FWD_GAP_USD`
 | 1.2 | 2026-11-06 | Remington Churchward | After AI gap review: reordered to the eight required sections; added Tab architecture and Validation rules with expected values; added `K_CALL`/`PREM_CALL`, the Stage-4 source column, and placeholder flags; added settlement date and dollar consequence; renamed `USD_PARITY` to `USD_MM` and named MM step 2 `MM_USD_NOW`; split the parity test into a formula check (V5) and a stale-quote flag (V6); aligned `PARITY_TOL` with the brief's 0.5 cents; replaced the text `GRID_RANGE` with a number; specified chart type, labels, tie rule, and gray named outputs; noted the premium-treatment change from the brief; removed template guidance sections |
 | 1.3 | 2026-11-12 | Remington Churchward | Instructor feedback: stated `PARITY_TOL` one way everywhere (0.005 as a fraction of `FWD_PARITY`, matching my rejection of the fixed 0.5-cent tolerance in the prompt log); corrected the §2.2 dollar figure; added named output `PARITY_GAP_PCT` so `PARITY_FLAG` and V6 test the same cell; repaired the V6 table row |
 | 1.4 | 2026-11-12 | Remington Churchward | Stage 3 build contract check, before generating the workbook: changed the color key to the contract's convention (green = formula, blue = assumption); added a Call tab and call-cost column, because the contract requires the call's premium and payoff as a function of `S_T` (still excluded from the winner labels); stated that check expected values are independent recomputations and named the check tolerances |
+| 1.5 | 2026-11-20 | Remington Churchward | Stage 4: the Stage-4 source for `F0_in`, `PREM_PUT` and `PREM_CALL` is now "kept" (the bank's quote and the scenario premiums), following the Stage 4 instructions and the 2026-11-14 feedback; the CIP-implied forward checks the quote rather than replacing it |
