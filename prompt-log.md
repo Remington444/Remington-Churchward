@@ -58,3 +58,16 @@ The problem statement is missing two required items. It has no settlement date (
 **What was produced:** Before building, Claude compared spec v1.3 to the build contract and found two conflicts. The spec's color key had black formulas and green cross-tab links, but the contract requires green = formula and blue = assumption. The spec also said the call was not built, but the contract requires the call's premium in USD and its payoff as a function of S_T. Claude fixed both in spec v1.4 (committed separately), adding a Call tab as a payable illustration that is excluded from the winner labels. It then generated model.xlsx from v1.4 with ten tabs, 45 named ranges, 480 formulas and no typed numbers outside Inputs. The Checks tab has V1–V19, with expected values recomputed independently from the inputs. All checks pass except V6, which flags the stale forward quote as the spec expects.
 
 **What was wrong and how it was caught:** On the first build, V1 (no error cells) reported one error. V1 scanned the Cover tab, and the Cover displays the check counts, which creates a circular reference. Claude narrowed V1's Cover range to skip the two check-count cells, recalculated, and V1 passed. My own audit of the workbook is still to do; findings go in the build-audit note.
+
+## 2026-11-20 (Stage 4 data hunt and population)
+
+**What I asked:** Start Stage 4: retrieve live market data, populate the workbook, re-run the checks, and cross-check against the FX Hedging Lab. The market-data memo stays mine to write.
+
+**What was produced:** Claude retrieved the 2026-11-19 values: ECB EUR/USD reference fix 1.0992, 3-month CME Term SOFR 4.20063% and 3-month Euribor 2.847%. It chose 3-month rates to match the scenario's 91-day horizon, even though the stage page mentions 1-year rates. It entered these through the named input cells only, with strikes reset to spot and the forward quote and premiums kept. Committed separately:
+1. **Population.** All checks pass except V6. The quote is 5.65% above the CIP forward of 1.102934, a gap of $149,678.
+2. **Structural fix.** The Cover provenance table and the parity notes on Notes and Checks were typed text that went stale when the inputs changed. They are now formulas linked to the inputs.
+3. **Spec v1.5.** The forward and premiums are now recorded as kept.
+
+It also entered the live inputs into the FX Hedging Lab. The forward, money-market and parity figures agree. The put differs by $374.61, because the Lab subtracts the premium as paid ($35,280) and the workbook carries it forward at R_USD ($35,654.61), as spec §4 says.
+
+**What was wrong and how it was caught:** The provenance and parity notes kept the placeholder wording and the old $102,064 gap after the live data loaded. Claude caught this by reading the Cover and Notes after recalculation, not from any check, because V1–V19 test numbers, not labels. I still need to verify each value at its source and write the memo.
